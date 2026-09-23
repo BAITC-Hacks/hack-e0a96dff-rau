@@ -20,7 +20,7 @@
 </div>
 
 СКРИНШОТ СИСТЕМЫ
-Сохраните изображение в docs/images/dashboard.png и замените блок ниже строкой:
+
 ![ALEM WIND — интерфейс системы](screenshot.png)
 
 
