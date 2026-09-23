@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#0b1219">
+  <title>Alem Wind — пульт ветропарка</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='9' fill='%23b8ed85'/%3E%3Cpath d='M16 28V15M16 15L6 11M16 15l8-8M16 15l4 9' stroke='%230d1815' stroke-width='3'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="/static/vendor/leaflet/leaflet.css">
+  <link rel="stylesheet" href="/static/styles.css">
+  <script defer src="/static/vendor/leaflet/leaflet.js"></script>
+  <script defer src="/static/app.js?v=csv-ru-2"></script>
+</head>
+<body>
+<svg class="icon-sprite" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+ <symbol id="i-wind" viewBox="0 0 24 24"><path d="M3 8h12a3 3 0 1 0-3-3M2 12h17a3 3 0 1 1-3 3M4 16h5a3 3 0 1 1-3 3"/></symbol>
+ <symbol id="i-grid" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><rect x="14" y="14" width="7" height="7" rx="1.5"/></symbol>
+ <symbol id="i-map" viewBox="0 0 24 24"><path d="m3 6 6-3 6 3 6-3v15l-6 3-6-3-6 3ZM9 3v15M15 6v15"/></symbol>
+ <symbol id="i-chart" viewBox="0 0 24 24"><path d="M3 3v18h18M6 15l4-5 4 3 6-8"/></symbol>
+ <symbol id="i-data" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3"/><path d="M4 5v14c0 4 16 4 16 0V5M4 12c0 4 16 4 16 0"/></symbol>
+ <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 19 19 5M5 5h14v14"/></symbol>
+ <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12m-5-5 5 5 5-5M4 16v5h16v-5"/></symbol>
+ <symbol id="i-temp" viewBox="0 0 24 24"><path d="M9 14V5a3 3 0 0 1 6 0v9a5 5 0 1 1-6 0ZM12 8v10"/></symbol>
+ <symbol id="i-bolt" viewBox="0 0 24 24"><path d="m14 2-11 12h8l-1 8 11-13h-8Z"/></symbol>
+ <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="2"/><path d="M12 1v4M12 19v4M1 12h4M19 12h4"/></symbol>
+ <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></symbol>
+ <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7v1"/></symbol>
+ <symbol id="i-turbine" viewBox="0 0 24 24"><path d="M12 12v10M12 12 3 8M12 12l7-9M12 12l7 6"/><circle cx="12" cy="12" r="1.6"/></symbol>
+ <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m8 4 8 8-8 8"/></symbol>
+</defs></svg>
+<a class="skip-link" href="#main">К содержимому</a>
+<header class="topbar">
+ <a href="/" class="brand" aria-label="Alem Wind — главная"><span class="brand-mark"><svg class="icon"><use href="#i-turbine"/></svg></span><span>ALEM<span class="brand-light">WIND</span><small>ENERGY INTELLIGENCE</small></span></a>
+ <div class="header-divider"></div><span class="topbar-label">Пульт ветропарка</span>
+ <div class="topbar-right"><span class="archive-badge"><span class="dot"></span>Архивный режим</span><span class="header-date">Февраль 2026</span><span class="avatar" title="Рабочее место диспетчера">Д</span></div>
+</header>
+<nav class="rail" aria-label="Разделы панели">
+ <a class="rail-link active" href="#main" title="Обзор"><svg class="icon"><use href="#i-grid"/></svg><span>Обзор</span></a>
+ <a class="rail-link" href="#map-panel" title="Карта"><svg class="icon"><use href="#i-map"/></svg><span>Карта</span></a>
+ <a class="rail-link" href="#forecast-panel" title="Прогноз"><svg class="icon"><use href="#i-chart"/></svg><span>Прогноз</span></a>
+ <a class="rail-link" href="#data-panel" title="Данные"><svg class="icon"><use href="#i-data"/></svg><span>Данные</span></a>
+ <a class="rail-help" href="/docs" target="_blank" rel="noopener" title="Документация API"><svg class="icon"><use href="#i-info"/></svg><span>API</span></a>
+</nav>
+<main id="main">
+ <div class="page-heading"><div><p class="eyebrow">КАЗАХСТАН <span>/</span> АЛМАТИНСКАЯ ОБЛАСТЬ</p><h1>Обзор ветропарка<span class="heading-dot">.</span></h1><p class="subtitle">От погоды — к почасовому прогнозу мощности.</p></div><button class="button secondary export-button" id="export-top" disabled><svg class="icon"><use href="#i-download"/></svg>Выгрузить прогноз</button></div>
+ <div id="app-error" class="error-banner" role="alert" hidden><span></span><button class="button secondary" id="retry">Повторить</button></div>
+ <section class="metrics" aria-label="Основные показатели">
+  <article class="metric metric-primary"><div class="metric-label"><span>Средняя мощность <small id="avg-period">· 48 ч</small></span><svg class="icon"><use href="#i-bolt"/></svg></div><div class="metric-value"><strong id="avg-power">—</strong><span>%</span></div><div class="metric-bottom"><span>Прогноз · от номинала</span><svg class="sparkline" id="spark-power" viewBox="0 0 104 30" aria-hidden="true"></svg></div></article>
+  <article class="metric"><div class="metric-label"><span>Пик мощности</span><svg class="icon cyan"><use href="#i-chart"/></svg></div><div class="metric-value"><strong id="peak-power">—</strong><span>%</span></div><div class="metric-bottom"><span id="peak-time">Загружаем прогноз</span><span class="tiny-tag">прогноз</span></div></article>
+  <article class="metric"><div class="metric-label"><span id="wind-label">Ветер на турбине</span><svg class="icon blue"><use href="#i-wind"/></svg></div><div class="metric-value"><strong id="sensor-wind">—</strong><span>м/с</span></div><div class="metric-bottom"><span id="wind-source">Последний час наблюдений</span><svg class="mini-wind" viewBox="0 0 62 25" aria-hidden="true"><path d="M0 8h44q14 0 8-6M8 14h44q12 0 7 7M0 20h26"/></svg></div></article>
+  <article class="metric"><div class="metric-label"><span id="temp-label">Температура на ВЭС</span><svg class="icon purple"><use href="#i-temp"/></svg></div><div class="metric-value"><strong id="sensor-temp">—</strong><span>°C</span></div><div class="metric-bottom"><span id="temp-source">Последний час наблюдений</span><span class="tiny-tag" id="temp-state">архив</span></div></article>
+ </section>
+ <div class="dashboard-grid">
+  <section class="panel map-panel" id="map-panel" aria-label="Интерактивная карта ВЭС">
+   <div class="panel-header"><div><h2>Карта ветропарка <span class="count-tag">02</span></h2><p>Выберите турбину, чтобы посмотреть её данные</p></div><button id="fit-map" class="icon-button" title="Показать все турбины" aria-label="Показать все турбины"><svg class="icon"><use href="#i-target"/></svg></button></div>
+   <div class="map-wrap"><div id="map"></div><div class="map-context"><span class="dot"></span><span id="map-context-label">Алматинская область</span></div><div class="map-caption">Нажмите на карту для выбора новой площадки</div><div id="map-error" class="map-error" hidden>Подложка карты недоступна. Точки ВЭС остаются доступны.</div></div>
+   <div class="map-footer"><span><i class="legend-dot"></i>Точки из набора данных</span><span id="map-coordinates">43.6442° N, 78.5372° E</span></div>
+  </section>
+  <section class="panel station-panel" aria-label="Данные выбранной турбины">
+   <div class="panel-header"><span class="eyebrow">ВЫБРАННЫЙ ОБЪЕКТ</span><span class="tiny-tag" id="station-kind">ВЭС</span></div>
+   <div class="station-title"><h2 id="station-name">Турбина 01</h2><span id="station-coordinates">43.64515, 78.53560</span></div>
+   <div class="station-visual"><svg class="turbine-illustration" viewBox="0 0 180 190" aria-hidden="true"><defs><linearGradient id="mast" x1="0" x2="1"><stop stop-color="#36564c"/><stop offset="1" stop-color="#9cb8a8"/></linearGradient></defs><ellipse cx="89" cy="175" rx="67" ry="7" fill="#1b2c2b"/><path d="m87 67-6 108h14L92 67" fill="url(#mast)"/><g fill="#b4d5bd" stroke="#d0e8d5" stroke-width=".5"><path d="m89 66-8-45 9-17 3 62Z"/><path d="m89 66 43 16 12 17-55-28Z"/><path d="m89 66-34 31-20 1 50-36Z"/></g><circle cx="89" cy="67" r="7" fill="#b8ed85"/><circle cx="89" cy="67" r="3" fill="#44624e"/><path d="M129 43h25m-18 8h26M26 138h24m-31 8h21" stroke="#59756c" stroke-linecap="round" opacity=".5"/></svg><div class="station-state"><span class="status-pill" id="station-status"><i class="dot"></i>Загрузка</span><p id="station-power-label">Измеренная мощность</p><strong><span id="station-power">—</span><small>%</small></strong><span class="muted small">от номинала</span></div></div>
+   <div class="sensor-meta"><span><svg class="icon"><use href="#i-clock"/></svg><span id="sensor-timestamp">—</span></span><span id="sensor-samples">— замеров</span></div>
+   <div class="station-list" id="station-list"></div>
+   <p class="station-note" id="station-note">Состояние оценено по мощности. Аварийные сигналы не предоставлены.</p>
+  </section>
+  <section class="panel forecast-panel" id="forecast-panel">
+   <div class="panel-header"><div><h2>Прогноз мощности</h2><p id="forecast-subtitle">Выпуск: 01 февраля 2026, 00:00 · Алматы</p></div><div class="segmented" id="horizon-control" role="group" aria-label="Горизонт прогноза"><button data-horizon="24" aria-pressed="false">24 ч</button><button data-horizon="48" class="active" aria-pressed="true">48 ч</button></div></div>
+   <div class="chart-toolbar"><div class="chart-tabs" role="group" aria-label="Показатель на графике"><button class="active" data-chart="power" aria-pressed="true"><i class="legend-dot"></i>Мощность</button><button data-chart="wind_ms" aria-pressed="false">Ветер</button><button data-chart="temperature_c" aria-pressed="false">Температура</button></div><span class="chart-unit" id="chart-unit">% от номинала</span></div>
+   <div class="chart-wrap" id="chart-wrap"><svg id="forecast-chart" role="img" aria-label="Почасовой прогноз выбранной турбины" viewBox="0 0 800 260" preserveAspectRatio="none"></svg><div id="chart-tooltip" class="chart-tooltip" hidden></div><div id="chart-empty" class="chart-empty">Загружаем почасовой прогноз…</div></div>
+   <div class="timeline"><button class="play-button" id="play-forecast" aria-label="Воспроизвести прогноз" title="Воспроизвести прогноз">▶</button><div class="timeline-input"><label for="forecast-hour"><span id="selected-time">01 фев, 01:00</span><span id="selected-reading">—</span></label><input id="forecast-hour" type="range" min="0" max="47" value="0" aria-label="Час прогноза"></div></div>
+   <div class="forecast-foot"><span><svg class="icon"><use href="#i-info"/></svg>Расчёт по архивному прогнозу погоды</span><span>Шаг 1 час</span></div>
+  </section>
+  <section class="panel coordinates-panel" id="coordinates-panel">
+   <div class="panel-header"><div><p class="eyebrow">ИССЛЕДУЙТЕ ПЛОЩАДКУ</p><h2>Прогноз по координатам</h2></div><svg class="icon muted"><use href="#i-target"/></svg></div>
+   <p class="form-intro">Введите координаты или отметьте точку на карте.</p>
+   <form id="coordinate-form"><div class="coordinate-fields"><label>Широта <span>−90 … 90</span><input id="latitude" name="latitude" type="number" step="any" min="-90" max="90" required value="43.645150" inputmode="decimal"></label><label>Долгота <span>−180 … 180</span><input id="longitude" name="longitude" type="number" step="any" min="-180" max="180" required value="78.535604" inputmode="decimal"></label></div><label class="reference-label" for="reference">Модель для оценки</label><select id="reference" name="reference"><option value="1">Турбина 01</option><option value="2">Турбина 02</option></select><button type="submit" class="button primary" id="calculate"><span>Рассчитать прогноз</span><svg class="icon"><use href="#i-arrow"/></svg></button><div id="calculation-status" class="calculation-status" aria-live="polite"></div></form>
+   <div class="scenario-note"><svg class="icon"><use href="#i-info"/></svg><p>Для новой точки — оценочный сценарий. Датчиков нет, точность переноса модели не проверена.</p></div>
+  </section>
+ </div>
+ <section class="insights" aria-label="Сводка по прогнозу"><div class="insight-title"><span class="eyebrow">НА ЧТО ОБРАТИТЬ ВНИМАНИЕ</span><h2>В деталях — больше ясности</h2></div><div class="insight-grid"><article><span class="insight-icon"><svg class="icon"><use href="#i-wind"/></svg></span><div><h3 id="insight-wind-title">Ветровые условия</h3><p id="insight-wind">Загружаем данные</p></div></article><article><span class="insight-icon purple"><svg class="icon"><use href="#i-temp"/></svg></span><div><h3 id="insight-temp-title">Температурный режим</h3><p id="insight-temp">Загружаем данные</p></div></article><article><span class="insight-icon lime"><svg class="icon"><use href="#i-chart"/></svg></span><div><h3>Изменение мощности</h3><p id="insight-ramp">Загружаем данные</p></div></article></div></section>
+ <section class="panel data-panel" id="data-panel"><div class="panel-header"><div><h2>Почасовые данные</h2><p id="table-caption">Прогноз выбранного объекта</p></div><button class="button secondary compact" id="toggle-table" aria-expanded="false" aria-controls="hourly-table-wrap">Показать таблицу <svg class="icon"><use href="#i-chevron"/></svg></button></div><div id="hourly-table-wrap" class="table-scroll" hidden><table><thead><tr><th>Время · Алматы</th><th>Мощность, %</th><th>Ветер, м/с</th><th>Температура, °C</th><th>Горизонт</th></tr></thead><tbody id="hourly-table"></tbody></table></div></section>
+ <footer class="footer"><span>ALEM WIND <span class="muted">/ HackAlem 2026</span></span><span>Open‑Meteo · CatBoost · <span id="mae-footer">Исторический прогноз</span></span></footer>
+</main>
+<div id="toast" class="toast" role="status" hidden></div>
+</body>
+</html>
