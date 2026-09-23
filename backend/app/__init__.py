@@ -1,0 +1,1 @@
+"""WattAhead backend application package."""
