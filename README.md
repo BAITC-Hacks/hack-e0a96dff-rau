@@ -21,7 +21,7 @@
 
 СКРИНШОТ СИСТЕМЫ
 Сохраните изображение в docs/images/dashboard.png и замените блок ниже строкой:
-![ALEM WIND — интерфейс системы](docs/images/dashboard.png)
+![ALEM WIND — интерфейс системы](screenshot.png)
 
 
 > **Место для скриншота системы**  
